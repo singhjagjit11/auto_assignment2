@@ -1,0 +1,51 @@
+---
+# tasks file for datadisk
+  # roles/datadisk/tasks/main.yml
+- name: Create partitions on data disk
+  parted:
+    device: "{{ datadisk_device }}"
+    number: "{{ item.number }}"
+    state: present
+    part_type: primary
+    part_start: "{{ item.start }}"
+    part_end: "{{ item.end }}"
+  with_items:
+    - { number: 1, start: 1MiB, end: "{{ datadisk_partition1_size }}" }
+    - { number: 2, start: 4GiB, "{{ datadisk_partition1_size }}", end: 9GiB}
+
+- name: Format partition 1 with XFS
+  filesystem:
+    fstype: "{{ datadisk_partition1_fstype }}"
+    dev: "{{ datadisk_device }}1"
+  become: true
+
+- name: Mount partition 1 on /part1
+  mount:
+    path: "{{ datadisk_partition1_mountpoint }}"
+    src: "{{ datadisk_device }}1"
+    fstype: "{{ datadisk_partition1_fstype }}"
+    state: mounted
+    opts: defaults
+  become: true
+
+- name: Format partition 2 with EXT4
+  filesystem:
+    fstype: "{{ datadisk_partition2_fstype }}"
+    dev: "{{ datadisk_device }}2"
+  become: true
+
+- name: Mount partition 2 on /part2
+  mount:
+    path: "{{ datadisk_partition2_mountpoint }}"
+    src: "{{ datadisk_device }}2"
+    fstype: "{{ datadisk_partition2_fstype }}"
+    state: mounted
+    opts: defaults
+  become: true
+
+- name: Add partitions to fstab
+  template:
+    src: fstab.j2
+    dest: /etc/fstab
+  become: true
+

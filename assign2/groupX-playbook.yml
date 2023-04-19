@@ -1,0 +1,47 @@
+---
+- name: Run all roles on Linux inventory nodes
+  hosts: linux
+  
+  vars:
+    # datadisk role variables
+    datadisk_device: /dev/sdc
+    datadisk_partition1_size: "4GiB"
+    datadisk_partition1_fstype: "xfs"
+    datadisk_partition1_mountpoint: "/part1"
+    datadisk_partition2_size: "5GiB"
+    datadisk_partition2_fstype: "ext4"
+    datadisk_partition2_mountpoint: "/part2"
+
+    # users role variables
+    users_users:
+      - username: user1000
+        groups:
+          - cloudadmins
+          - wheel
+      - username: user2000
+        groups:
+          - cloudadmins
+          - wheel
+
+  tasks:
+    - name: Partition the data disk
+      include_role:
+        name: datadisk
+
+    - name: Configure system profile
+      include_role:
+        name: system_profile
+
+    - name: Configure users
+      include_role:
+        name: users
+      vars:
+        users_ssh_key_type: ed25519
+        users_ssh_key_bits: 4096
+
+    - name: Configure web server
+      include_role:
+        name: webserver
+      vars:
+        webserver_hostname_prefix: "vm"
+   

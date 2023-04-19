@@ -1,0 +1,6 @@
+[linux]
+vm-1 ansible_host=52.188.213.71 ansible_user=adminuser
+vm-2 ansible_host=52.188.213.77 ansible_user=adminuser
+
+[windows]
+52.188.213.87

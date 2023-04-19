@@ -1,0 +1,12 @@
+---
+cloudadmins_group_name: cloudadmins
+users:
+  - username: user1000
+    groups:
+      - '{{ cloudadmins_group_name }}'
+      - wheel
+  - username: user2000
+    groups:
+      - '{{ cloudadmins_group_name }}'
+      - wheel
+# defaults file for users

@@ -1,0 +1,10 @@
+---
+datadisk_device: "/dev/sdc"
+datadisk_partition1_size: "4GiB"
+datadisk_partition1_fstype: "xfs"
+datadisk_partition1_mountpoint: "/part1"
+datadisk_partition2_size: "9GiB"
+datadisk_partition2_fstype: "ext4"
+datadisk_partition2_mountpoint: "/part2"
+
+# defaults file for datadisk
